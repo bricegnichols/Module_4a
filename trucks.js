@@ -505,76 +505,36 @@ var foodTrucks = [
 	}
 ];
 
-// this module should support the following methods:
-
-var truckCalls = {
-
-	// getTrucks() - return all trucks
-	getTrucks: function() {
-
-		var allTrucks = [];
-		
-		for (truck in foodTrucks) {
-			allTrucks.push(foodTrucks[truck]['name'])
-		}
-
-		return allTrucks;
-	}, 
-	
-
-	// getTruck(name) - return the truck object matching 'name'
-	getTruck: function(name) {
-
-		for (truck in foodTrucks) {
-			if (foodTrucks[truck]['name'] === name) {
-
-					return foodTrucks[truck];
-				}
-
-			}
-		},
-
-	// getFoodTypes() - return unique list of all associated food types (underscore has a function to help)
-	getFoodTypes: function() {
-		allTypes = [];
-		for (truck in foodTrucks) {
-			for (foodType in foodTrucks[truck]['type']) {
-				allTypes.push(foodTrucks[truck]['type'][foodType]);	
-			}
-		}
-
-		// return only unique values of food types
-		return _und.uniq(allTypes);
-	},
 
 
-	// filterByDay(day) - return trucks with 'day' in schedule (use your filterByDay function from Module 3 homework)
-	filterByDay: function(requestedDay) {
-		var openTrucks = [];
-		for (truck in foodTrucks) {
-			openDays = foodTrucks[truck]['schedule'];
-			if (_und.contains(openDays, requestedDay)) {
-				openTrucks.push(foodTrucks[truck]['name']);
-			}
-		}
+function getTrucks() {
+	return foodTrucks;
+}
 
-		return openTrucks;
-	}, 
+function getTruck(name) {
+	return _und.find(foodTrucks, function(truck) {
+		return truck.name === name;
+	});
+}
 
+function getFoodTypes() {
+	var masterList = _und.map(foodTrucks, function(truck) {
+		return truck.type;
+	});
+	var flattenedArrays = _und.flatten(masterList);
+	var uniqList = _und.uniq(flattenedArrays);
+	return uniqList;
+}
 
+function filterByFoodType(type) {
+	return _und.filter(foodTrucks, function (truck) {
+		return _und.contains(truck.type, type);
+	});
+}
 
-	// filterByFoodType(foodType) - return trucks with associated 'foodType'	
-	filterByFoodType: function(foodType) {
-		var matchingTrucks = [];
-		for (truck in foodTrucks) {
-			truckType = foodTrucks[truck]['type']
-			if (_und.contains(truckType, foodType)) {
-				matchingTrucks.push(foodTrucks[truck]['name']);
-			}
-		}
-
-		return matchingTrucks;
-	}
+module.exports = {
+	getTrucks: getTrucks,
+	getTruck: getTruck,
+	getFoodTypes: getFoodTypes,
+	filterByFoodType: filterByFoodType
 };
-
-module.exports.truckCalls = truckCalls;
